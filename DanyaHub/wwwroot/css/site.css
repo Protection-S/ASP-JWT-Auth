@@ -1,0 +1,27 @@
+body {
+    background-color: #2c2c2c;
+    color: #f5f5f5;
+}
+
+.navbar-brand i {
+    margin-left: 5px;
+}
+
+.nav-link i {
+    margin-left: 5px;
+}
+
+.table-dark th, .table-dark td {
+    color: #f5f5f5;
+}
+
+.btn-primary, .btn-success, .btn-warning, .btn-danger {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

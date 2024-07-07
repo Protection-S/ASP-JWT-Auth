@@ -1,0 +1,33 @@
+﻿@model List<DanyaHub.Models.User>
+
+<h2>Users List</h2>
+
+<p>
+    <a asp-action="CreateUser" class="btn btn-primary mb-3"><i class="fas fa-user-plus"></i> Create New User</a>
+</p>
+
+<table class="table table-dark table-striped">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Is Admin</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+                <tr>
+                    <td>@user.Username</td>
+                    <td>@(user.IsAdmin ? "Yes" : "No")</td>
+                    <td>
+                        <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                    @if (!user.IsAdmin)
+                    {
+                                <a asp-action="DeleteUser" asp-route-id="@user.Id" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
+                    }
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>

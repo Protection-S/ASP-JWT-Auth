@@ -1,0 +1,17 @@
+﻿@model DanyaHub.Models.User
+
+<h2>Edit User</h2>
+
+<form asp-action="EditUser" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" placeholder="Enter username" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="form-check">
+        <input asp-for="IsAdmin" class="form-check-input" />
+        <label class="form-check-label" asp-for="IsAdmin">Is Admin</label>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-save"></i> Save</button>
+</form>
