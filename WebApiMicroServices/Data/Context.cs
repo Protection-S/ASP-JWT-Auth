@@ -1,8 +1,8 @@
-﻿using DanyaHub.Models;
+﻿using WebApiMicroServices.Models;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 
-namespace DanyaHub.Data
+namespace WebApiMicroServices.Data
 {
     public class Context : DbContext
     {
@@ -10,8 +10,6 @@ namespace DanyaHub.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Sock> Socks { get; set; }
-
-        public DbSet<FileModel> Files { get; set; }
 
     }
 

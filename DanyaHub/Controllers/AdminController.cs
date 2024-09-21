@@ -1,5 +1,7 @@
 ﻿using DanyaHub.Data;
 using DanyaHub.Models;
+using MicroServicesProj.Hubs;
+using DanyaHub.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +18,18 @@ namespace DanyaHub.Controllers
         public AdminController(Context context)
         {
             _context = context;
+        }
+
+
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var users = _context.Users.ToList();
+            var userStatuses = UserStatusStore.GetAllUserStatuses();
+
+            ViewBag.UserStatuses = userStatuses ?? new Dictionary<string, bool>();
+
+            return View(users);
         }
 
         public async Task<IActionResult> Users()

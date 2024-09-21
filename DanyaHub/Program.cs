@@ -63,7 +63,14 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
 });
 
+builder.Services.AddSignalR();
+
+
 var app = builder.Build();
+
+app.UseRouting();
+app.MapHub<UserStatusHub>("/userstatushub");
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

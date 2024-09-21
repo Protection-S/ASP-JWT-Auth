@@ -9,6 +9,9 @@ using DanyaHub.Properties;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.SignalR;
+using MicroServicesProj.Hubs;
+
 
 namespace DanyaHub.Controllers
 {
@@ -17,11 +20,13 @@ namespace DanyaHub.Controllers
     {
         private readonly Context _context;
         private readonly JwtSettings _jwtSettings;
+        private readonly IHubContext<UserStatusHub> _hubContext;
 
-        public AuthController(Context context, JwtSettings jwtSettings)
+        public AuthController(Context context, JwtSettings jwtSettings, IHubContext<UserStatusHub> hubContext)
         {
             _context = context;
             _jwtSettings = jwtSettings;
+            _hubContext = hubContext;
         }
 
         [HttpGet("login")]
@@ -29,9 +34,8 @@ namespace DanyaHub.Controllers
         {
             return View();
         }
-
         [HttpPost("login")]
-        public IActionResult Login(User loginUser)
+        public async Task<IActionResult> Login(User loginUser)
         {
             var user = _context.Users.SingleOrDefault(u => u.Username == loginUser.Username && u.Password == loginUser.Password);
             if (user == null)
@@ -48,6 +52,9 @@ namespace DanyaHub.Controllers
                 Secure = true,
                 SameSite = SameSiteMode.Strict
             });
+
+            UserStatusStore.SetUserStatus(user.Username, true);
+            await _hubContext.Clients.All.SendAsync("ReceiveUserStatus", user.Username, true);
 
             var redirectUrl = user.IsAdmin ? "/Admin/Users" : "/Files/Index";
             return Redirect(redirectUrl);
@@ -108,10 +115,16 @@ namespace DanyaHub.Controllers
 
         public async Task<IActionResult> Logout()
         {
+            var username = User.Identity.Name;
+
             if (HttpContext.Request.Cookies.ContainsKey("jwt"))
             {
                 HttpContext.Response.Cookies.Delete("jwt");
             }
+
+            UserStatusStore.SetUserStatus(username, false);
+            await _hubContext.Clients.All.SendAsync("ReceiveUserStatus", username, false);
+
             return RedirectToAction("Index", "Home");
         }
 
